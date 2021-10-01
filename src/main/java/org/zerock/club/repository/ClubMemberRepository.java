@@ -10,12 +10,12 @@ import java.util.Optional;
 public interface ClubMemberRepository extends JpaRepository<ClubMember, String> {
 
     // FETCH: entity graph에 명시한 attribute는 EAGER로 패치하고, 나머지 attribute는 LAZY로 패치
-    // LOAD: entity graph에 명시한 attribute는 EAGER로 패치하고,
-    // 나머지 attribute는 entity에 명시한 fetch type이나 디폴트 FetchType으로 패치
+    // LOAD : entity graph에 명시한 attribute는 EAGER로 패치하고, 나머지 attribute는 entity에 명시한 fetch type이나 디폴트 FetchType으로 패치
     // (e.g. @OneToMany는 LAZY, @ManyToOne은 EAGER 등이 디폴트이다.)
-    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD) // 회원 가진 권한을 모두 확인해야 하기 때문에 LOAD(Default -> EAGER)로 정의
     @Query("SELECT m " +
             " FROM ClubMember m " +
             " WHERE m.fromSocial=:social AND m.email=:email ")
     Optional<ClubMember> findByEmail(String email, Boolean social);
-}
+
+} // class end
