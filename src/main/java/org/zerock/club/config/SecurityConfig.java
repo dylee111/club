@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin(); // 인가, 인증에 문제 시 로그인 페이지로 이동
         // disable 설정 이유 : 개발 중에 에러 발생 시, csrf에서 발생했는지 알 수 없기 때문에 disable로 설정 후, 개발이 마무리 단계에서 적용하는 것이 유리
         http.csrf().disable(); // CSRF 토큰을 발행하지 않기 위한 설정
-        http.logout();
+        http.oauth2Login();
+//        http.logout();
     } //configure() -> 지정한 URL은 별도의 인증 없이 접근 가능 및 특정 URL에 권한 부여
 }

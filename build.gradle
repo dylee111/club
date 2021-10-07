@@ -47,6 +47,9 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/net.coobird/thumbnailator
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.14'
+
+	// google social login - OAuth library
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 test {
