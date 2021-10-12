@@ -35,7 +35,7 @@ public class SampleController {
         log.info("exAdmin >>>>>>");
     }
 
-    @PreAuthorize("#clubAuthMember != null && #clubAuthMember.username eq\"user98@ds.org\"") // 매개변수 clubAuthMember와 매칭
+    @PreAuthorize("#clubAuthMember != null && #clubAuthMember.username eq\"user98@ds.org\"") // 매개변수 clubAuthMember와 매칭, #은 매개변수로 넘어오는 객체를 받기 위함.
     @GetMapping("/exOnly")
     public String exMemberOnly(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMember) {
         log.info("exMemberOnly >>>>>>>>>>>>>>>>>>>>>>>>>>");
