@@ -51,19 +51,19 @@ public class ClubOAuthUserDetailService extends DefaultOAuth2UserService {
         log.info("---------------------------");
         log.info("EMAIL >>> " + email);
 
-        ClubMember member = saveSocialMember(email);
+        ClubMember member = saveSocialMember(email); // social member를 DB에 저장
 
 //        return oAuth2User;
 
-        ClubAuthMemberDTO clubAuthMember = new ClubAuthMemberDTO(
+        ClubAuthMemberDTO clubAuthMemberDTO = new ClubAuthMemberDTO(
                 member.getEmail(),
                 member.getPassword(),
                 true,
                 member.getRoleSet().stream().map(
                         role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toList()), oAuth2User.getAttributes());
-                clubAuthMember.setName(member.getName());
+                clubAuthMemberDTO.setName(member.getName());
 
-        return clubAuthMember;
+        return clubAuthMemberDTO;
     }// loadUser()
 
     /*

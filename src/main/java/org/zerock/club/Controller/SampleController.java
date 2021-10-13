@@ -19,7 +19,7 @@ public class SampleController {
         log.info("exAll >>>>>>");
     }
 
-    //@PreAuthrize("principal.username == #clubAuthMember.username") // 회원이 작성한 글 수정시에 해당 멤버의 username과 일치하는지 확인하고 일치하면 수정 및 삭제 가능 권한 부여
+    //@PreAuthrize("principal.username == #clubAuthMemberDTO.username") // 회원이 작성한 글 수정시에 해당 멤버의 username과 일치하는지 확인하고 일치하면 수정 및 삭제 가능 권한 부여
     @PreAuthorize("isAuthenticated()") // 인증된 회원은 모두 가능
     @GetMapping("/member")
     public void exMember(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMemberDTO) {
@@ -29,17 +29,18 @@ public class SampleController {
         log.info(clubAuthMemberDTO);
     }
 
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PreAuthorize("hasRole('ADMIN')") // ADMIN이라는 권한을 가졌는지 확인
     @GetMapping("/admin")
     public void exAdmin() {
         log.info("exAdmin >>>>>>");
     }
 
-    @PreAuthorize("#clubAuthMember != null && #clubAuthMember.username eq\"user98@ds.org\"") // 매개변수 clubAuthMember와 매칭, #은 매개변수로 넘어오는 객체를 받기 위함.
+    @PreAuthorize("#clubAuthMemberDTO != null && #clubAuthMemberDTO.username eq\"user98@ds.org\"") // 매개변수 clubAuthMember와 매칭, #은 매개변수로 넘어오는 객체를 받기 위함.
     @GetMapping("/exOnly")
-    public String exMemberOnly(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMember) {
+    public String exMemberOnly(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMemberDTO) {
         log.info("exMemberOnly >>>>>>>>>>>>>>>>>>>>>>>>>>");
-        log.info(clubAuthMember);
+        log.info(clubAuthMemberDTO);
 
         return "/sample/admin";
     }
