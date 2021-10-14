@@ -67,12 +67,12 @@ public class SampleController {
             log.info(email);
             log.info(str);
             model.addAttribute("jwtValue", str);
+            return "/sample/notes";
         } catch (NullPointerException e) {
             e.printStackTrace();
             return "redirect:../login";
         }
 
-        return "/sample/notes";
 //        if (!(email == null)) {
 //            model.addAttribute("jwtValue", str);
 //            return "/notes";
