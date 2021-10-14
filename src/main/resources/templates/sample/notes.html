@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NOTE</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script th:inline="javascript">
+        $(document).ready(function() {
+
+            var jwtValue = [[${jwtValue}]];
+
+            $(".btn").click(function() {
+                $.ajax({
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Authorization",'Bearer ' + jwtValue);
+                    },
+                    dataType: "json",
+                    url: 'http://localhost:8080/notes/all',
+                    data: {email: 'user20@ds.org'},
+                    success: function(arr) {
+                        console.log(arr);
+                    }
+                }); // ajax end.
+            }); // btn event end.
+
+        });
+    </script>
+</head>
+<body>
+    <button type="button" class="btn">버튼</button>
+</body>
+</html>

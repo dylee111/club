@@ -11,8 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.zerock.club.security.filter.ApiCheckFilter;
+import org.zerock.club.security.filter.ApiLoginFilter;
+import org.zerock.club.security.handler.ApiLoginFailhandler;
 import org.zerock.club.security.handler.ClubLoginSuccessHandler;
 import org.zerock.club.security.service.ClubUserDetailsService;
+import org.zerock.club.security.util.JWTUtil;
 
 @Configuration
 @Log4j2
@@ -26,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
         /* bcrypt라는 해시함수 이용 패스워드 암호화
-        * 암호화된 복화화가 불가, 매번 암호화된 값도 다름
+        * 암호화된 복호화로 디코딩 불가, 매번 암호화된 값도 다름
         * */
     }
 
@@ -35,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        auth.inMemoryAuthentication().withUser("user1") // 사용자 계정
 //                .password("$2a$10$H6YWai6..rgdWp9jts3or.pUvlY3JrRWMkC9KOWBO/PQfgmRLVnxS")
 //                .roles("USER");
-//    } //configure()
+//    } // configure()
 
     @Override
     // HttpSecurity : URL에 대한 권한을 설정.
@@ -51,11 +56,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.oauth2Login().successHandler(successHandler());
         http.rememberMe().tokenValiditySeconds(60 * 60 * 24 * 7) // 로그인 7일간 유지
                 .userDetailsService(userDetailsService);
+
+        // ApiCheckFilter가 User~Filter보다 이전에 동작하도록 지정
+        http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     } //configure() -> 지정한 URL은 별도의 인증 없이 접근 가능 및 특정 URL에 권한 부여
 
     @Bean
     public ClubLoginSuccessHandler successHandler() {
         return new ClubLoginSuccessHandler(passwordEncoder());
     }
+
+    @Bean
+    public ApiCheckFilter apiCheckFilter() { return new ApiCheckFilter("/notes/**/*", jwtUtil()); } // ** -> /notes/ 하위의 모든 url을 포함. 해당 url로 접근할 때만 동작하도록 지정
+
+    @Bean
+    public ApiLoginFilter apiLoginFilter() throws Exception {
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login", jwtUtil()); // 매개변수로 지정된 url로 접근할 때 동작하도록 지정
+        // AbstractAuthenticationProcessingFilter는 AuthenticationManager가 반드시 필요. authenticationManager()로 추가
+        apiLoginFilter.setAuthenticationManager(authenticationManager());  // API 인증 처리
+        apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailhandler()); // 로그인 실패
+
+        return apiLoginFilter;
+    }
+
+    @Bean
+    public JWTUtil jwtUtil() { return new JWTUtil(); }
 
 }
