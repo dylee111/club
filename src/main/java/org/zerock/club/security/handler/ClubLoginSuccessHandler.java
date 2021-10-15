@@ -38,13 +38,13 @@ public class ClubLoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("------------------------------");
         log.info("onAuthenticationSuccess");
 
-        ClubAuthMemberDTO authMember = (ClubAuthMemberDTO) authentication.getPrincipal();
+        ClubAuthMemberDTO authMemberDTO = (ClubAuthMemberDTO) authentication.getPrincipal();
 
-        boolean fromSocial = authMember.isFromSocial();
+        boolean fromSocial = authMemberDTO.isFromSocial();
 
         log.info("Need Modify Member ? " + fromSocial);
 
-        boolean passwordResult = passwordEncoder.matches("1111", authMember.getPassword()); // rawPassword, 인코딩된 password
+        boolean passwordResult = passwordEncoder.matches("1111", authMemberDTO.getPassword()); // rawPassword, 인코딩된 password
 
         if (fromSocial && passwordResult) {
             redirectStrategy.sendRedirect(request, response, "/member/modify?from=social");
@@ -54,13 +54,13 @@ public class ClubLoginSuccessHandler implements AuthenticationSuccessHandler {
 //        Collection<GrantedAuthority> roleList = authMember.getAuthorities();
 
         List<String> roleList = new ArrayList<>();
-        authMember.getAuthorities().forEach(new Consumer<GrantedAuthority>() {
+        authMemberDTO.getAuthorities().forEach(new Consumer<GrantedAuthority>() {
             @Override
             public void accept(GrantedAuthority grantedAuthority) {
                 roleList.add(grantedAuthority.getAuthority());
             }
         });
-        log.info("Auth >>>>>>>>>>>>>>>>>>>>>>>" + authMember.getAuthorities());
+        log.info("Auth >>>>>>>>>>>>>>>>>>>>>>>" + authMemberDTO.getAuthorities());
 
         String sendUrl = "";
         if (roleList.contains("ROLE_USER")) { sendUrl = "/sample/all"; }
