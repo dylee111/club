@@ -15,15 +15,16 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-/*
-* OAuth2User : 구글의 회원정보를 가져오기 위함
-* */
+
+// OAuth2User : 구글의 회원정보를 가져오기 위함
+// User : Security가 가지고 있는 Login 정보와 DB에 담긴 정보와 교환하기 위한 객체
 public class ClubAuthMemberDTO extends User implements OAuth2User {
 
     private String email;
     private String name;
     private String password;
     private boolean fromSocial;
+    // 구글로부터 받아오는 정보 (picture, email(id) 등)
     private Map<String, Object> attr;
 
     public ClubAuthMemberDTO(String username, String password, boolean fromSocial,

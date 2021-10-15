@@ -57,20 +57,20 @@ public class SampleController {
         return "/sample/admin";
     }
 
-//    @PreAuthorize("principal.")
+    //    @PreAuthorize("principal.")
     @GetMapping("/notes")
     public String notes(Model model, @AuthenticationPrincipal ClubAuthMemberDTO clubAuthMemberDTO, RedirectAttributes redirectAttributes) throws Exception {
 
         try {
             String email = clubAuthMemberDTO.getEmail();
+            log.info("email >>>>>>>>>>>>>>>>>>>>>>>>>>>> " + email);
             String str = jwtUtil.generateToken(email);
-            log.info(email);
-            log.info(str);
+            log.info("str >>>>>>>>>>>>>>>>>>>>>>>>>>>>" + str);
             model.addAttribute("jwtValue", str);
             return "/sample/notes";
         } catch (NullPointerException e) {
             e.printStackTrace();
-            return "redirect:../login";
+            return "redirect:../sample/login";
         }
 
 //        if (!(email == null)) {
@@ -80,5 +80,17 @@ public class SampleController {
 //            return "redirect:/";
 //        }
 
+    } // notes()
+
+    @GetMapping("/login")
+    public void login(String error, String logout, Model model) {
+        log.info("login error >>> " + error);
+        log.info("login logout" + logout);
+        if (error != null) {
+            model.addAttribute("error", "Login Error Check your Account");
+        }
+        if (logout != null) {
+            model.addAttribute("logout", "logout");
+        }
     }
 }

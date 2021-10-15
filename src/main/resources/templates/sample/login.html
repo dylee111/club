@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      .box {
+        border: 1px solid black;
+        border-radius: 20px;
+        position: absolute;
+        width: 400px;
+        height: 300px;
+        left: 50%;
+        top: 50%;
+        margin-left: -200px;
+        margin-top: -150px;
+        text-align: center;
+      }
+
+      input {
+        width: 280px;
+        height: 40px;
+        margin-bottom: 12px;
+      }
+
+      #login, #join {
+        width:280px;
+        margin: 0 auto;
+        border: 1px solid rgb(169, 171, 158);
+        margin-bottom: 12px;
+        background: #d6e2cc;
+        cursor: pointer;
+      }
+
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+      $(function(){
+        $("#login").click(function(){
+          var id = $('#username');
+          var pw = $('#password');
+
+          if(id.val() == ''){
+            alert("아이디를 입력해주세요.");
+            id.focus();
+            return;
+          }
+          if(pw.val() == ''){
+            alert("비밀번호를 입력해주세요.");
+            pw.focus();
+            return;
+          }
+          $("form").submit();
+        });
+        $('#join').click(function() {
+          location.href = "join.html";
+        });
+      });
+    </script>
+  </head>
+  <body>
+  <div th:fragment="content">
+    <form class="" action="/login" method="post">
+      <div class="box">
+        <h1>로그인</h1>
+        <span th:if="${param.error}" style="height:20px; color:red;">아이디와 비밀번호를 확인해주세요.</span>
+        <span th:if="${param.logout}" style="height:20px; color:red;">로그아웃 되었습니다.</span>
+        <input id="username" type="text" name="username" placeholder="아이디"><br>
+        <input id="password" type="password" name="password" placeholder="비밀번호"><br>
+<!--        <input id="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /><br>-->
+        <div id="login">로그인</div>
+        <div id="join">회원가입</div>
+      </div>
+
+      <table>
+        <tbody>
+        <tr>
+          <td><a href="/oauth2/authorization/google">Google</a></td>
+        </tr>
+        </tbody>
+
+      </table>
+    </form>
+  </div>
+  </body>
+</html>

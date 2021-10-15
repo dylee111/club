@@ -50,7 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sample/all").permitAll()
                 .antMatchers("/sample/member").hasRole("USER"); // ENUM에서 선언한 USER*/
 
-        http.formLogin(); // 인가, 인증에 문제 시 로그인 페이지로 이동
+//        http.formLogin(); // 인가, 인증에 문제 시 로그인 페이지로 이동            // spring security에 설정된 로그인 과정을 거치게 함.
+        http.authorizeRequests().and().formLogin().loginPage("/sample/login").loginProcessingUrl("/login").successHandler(successHandler()).failureUrl("/sample/login?error").permitAll();
+
         http.csrf().disable(); // CSRF 토큰을 발행하지 않기 위한 설정 // disable 설정 이유 : 개발 중에 에러 발생 시, csrf에서 발생했는지 알 수 없기 때문에 disable로 설정 후, 개발이 마무리 단계에서 적용하는 것이 유리
         http.logout();
         http.oauth2Login().successHandler(successHandler());
